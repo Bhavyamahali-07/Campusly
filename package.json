@@ -1,0 +1,22 @@
+{
+  "name": "college-platform",
+  "version": "1.0.0",
+  "description": "College Social & Collaboration Platform",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build:client": "cd client && npm run build",
+    "install:all": "cd client && npm install && cd ../server && npm install",
+    "build": "npm run build:client",
+    "start": "cd server && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
