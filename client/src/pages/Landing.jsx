@@ -20,7 +20,10 @@ export default function Landing() {
             </div>
 
             {/* Call to Action Layer */}
-            <div className="absolute bottom-12 left-0 right-0 z-20 flex justify-center pointer-events-none">
+            <div className="absolute bottom-12 left-0 right-0 z-20 flex flex-col items-center gap-4 pointer-events-none">
+                <p className="text-xs md:text-sm text-gray-500 dark:text-zinc-400 text-center max-w-md px-4 leading-relaxed pointer-events-none">
+                    Discover events, connect with clubs, join discussions and make your campus experience more meaningful.
+                </p>
                 <button 
                     onClick={() => navigate('/login')}
                     className="pointer-events-auto px-8 py-3.5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded-full font-semibold shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(0,0,0,0.2)] hover:scale-105 transition-all flex items-center gap-2"

@@ -43,7 +43,7 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
   const [announcements, setAnnouncements] = useState([]);
   const [topStudents, setTopStudents] = useState([]);
-  const [campusStats, setCampusStats] = useState({ upcomingEvents: 0, activeClubs: 0, totalDiscussions: 0 });
+  const [campusStats, setCampusStats] = useState({ upcomingEvents: 0, joinedClubs: 0, totalDiscussions: 0, campusRank: 0 });
 
   const isAdmin = user?.role === 'COLLEGE_ADMIN' || user?.role === 'SUPER_ADMIN';
 
@@ -133,17 +133,17 @@ export default function Home() {
             <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
               {[
                 { label: 'Upcoming Events', value: campusStats.upcomingEvents, icon: Calendar, color: 'text-primary-400', bg: 'bg-primary-500/10' },
-                { label: 'Joined Clubs', value: campusStats.activeClubs, icon: Users, color: 'text-accent-400', bg: 'bg-accent-500/10' },
+                { label: 'Joined Clubs', value: campusStats.joinedClubs, icon: Users, color: 'text-accent-400', bg: 'bg-accent-500/10' },
                 { label: 'Discussions', value: campusStats.totalDiscussions, icon: MessageSquare, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-                { label: 'Campus Rank', value: user?.totalPoints || 0, icon: Trophy, color: 'text-warning-400', bg: 'bg-warning-500/10' },
+                { label: 'Campus Rank', value: campusStats.campusRank, icon: Trophy, color: 'text-warning-400', bg: 'bg-warning-500/10', isRank: true },
               ].map((stat, i) => (
                 <div key={i} className="bg-white border border-gray-100 shadow-sm rounded-2xl p-4 flex flex-col hover:-translate-y-1 transition-transform duration-300 cursor-default">
                   <div className={`w-8 h-8 rounded-lg ${stat.bg} ${stat.color} flex items-center justify-center mb-3`}>
                     <stat.icon className="w-4 h-4" />
                   </div>
                   <div className="text-2xl font-bold text-gray-900 mb-1">
-                    {i === 3 && stat.value > 0 ? '#' : ''}
-                    <AnimatedStat end={stat.value || 0} />
+                    {stat.isRank && stat.value > 0 ? '#' : ''}
+                    {stat.value > 0 ? <AnimatedStat end={stat.value} /> : stat.isRank ? '—' : '0'}
                   </div>
                   <div className="text-xs text-gray-500 font-medium">{stat.label}</div>
                 </div>

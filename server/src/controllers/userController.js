@@ -1,4 +1,7 @@
 import User from '../models/User.js';
+import ClubMember from '../models/ClubMember.js';
+import Event from '../models/Event.js';
+import DiscussionMessage from '../models/DiscussionMessage.js';
 import ApiError from '../utils/ApiError.js';
 import ApiResponse from '../utils/ApiResponse.js';
 import asyncHandler from '../utils/asyncHandler.js';
@@ -112,5 +115,71 @@ export const searchUsers = asyncHandler(async (req, res) => {
     limit: parseInt(limit),
     total,
     pages: Math.ceil(total / parseInt(limit)),
+  });
+});
+
+/**
+ * @route   GET /api/v1/users/campus/stats
+ * @desc    Get personalized dashboard stats for the logged-in student
+ */
+export const getCampusStats = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const collegeId = req.user.college._id || req.user.college;
+
+  // 1. Joined Clubs — count of clubs the student is an active member of
+  const joinedClubs = await ClubMember.countDocuments({
+    user: userId,
+    status: 'ACTIVE',
+  });
+
+  // 2. Upcoming Events — events with future dates in the student's college
+  const upcomingEvents = await Event.countDocuments({
+    college: collegeId,
+    date: { $gte: new Date() },
+    status: { $in: ['UPCOMING', 'ONGOING'] },
+  });
+
+  // 3. Discussions — total unread messages across the student's clubs
+  // Get all clubs the student is a member of
+  const memberClubs = await ClubMember.find({
+    user: userId,
+    status: 'ACTIVE',
+  }).select('club');
+
+  const clubIds = memberClubs.map(m => m.club);
+
+  let totalDiscussions = 0;
+  if (clubIds.length > 0) {
+    // Count messages in the student's clubs that were posted by others
+    // (since there's no read tracking, we count recent messages from the last 7 days from others)
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    totalDiscussions = await DiscussionMessage.countDocuments({
+      club: { $in: clubIds },
+      user: { $ne: userId },
+      isDeleted: false,
+      createdAt: { $gte: oneWeekAgo },
+    });
+  }
+
+  // 4. Campus Rank — rank the student by activityPoints among all students in the college
+  let campusRank = 0;
+  const userPoints = req.user.activityPoints || 0;
+  if (userPoints > 0) {
+    // Count how many students have more points
+    const studentsAbove = await User.countDocuments({
+      college: collegeId,
+      isActive: true,
+      activityPoints: { $gt: userPoints },
+    });
+    campusRank = studentsAbove + 1;
+  }
+
+  ApiResponse.success(res, {
+    stats: {
+      joinedClubs,
+      upcomingEvents,
+      totalDiscussions,
+      campusRank,
+    },
   });
 });

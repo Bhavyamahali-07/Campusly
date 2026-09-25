@@ -117,7 +117,7 @@ export const getClub = asyncHandler(async (req, res) => {
   ApiResponse.success(res, {
     club,
     membership: membership || null,
-    members: members.map(m => ({ ...m.user.toObject(), role: m.role, joinedAt: m.createdAt })),
+    members: members.filter(m => m.user).map(m => ({ ...m.user.toObject(), role: m.role, joinedAt: m.createdAt })),
   });
 });
 

@@ -276,9 +276,9 @@ export default function IntroAnimation() {
                         initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
                         transition={{ duration: 1 }}
-                        className="text-2xl font-medium tracking-tight text-gray-800 dark:text-zinc-100 md:text-4xl"
+                        className="text-4xl md:text-6xl font-bold tracking-tight text-gray-800 dark:text-zinc-100 leading-tight text-center"
                     >
-                        Your Campus, Your Community.
+                        Your Campus<br />Your Community
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -296,11 +296,11 @@ export default function IntroAnimation() {
                     className="absolute top-[10%] z-10 flex flex-col items-center justify-center text-center pointer-events-none px-4"
                 >
                     <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 dark:text-zinc-100 tracking-tight mb-4">
-                        Explore Our Vision
+                        Your Campus, Your Community
                     </h2>
                     <p className="text-sm md:text-base text-gray-600 dark:text-zinc-400 max-w-lg leading-relaxed">
-                        Discover a world where technology meets creativity. <br className="hidden md:block" />
-                        Scroll through our curated collection of innovations designed to shape the future.
+                        Discover events, connect with clubs, join discussions <br className="hidden md:block" />
+                        and make your campus experience more meaningful.
                     </p>
                 </motion.div>
 

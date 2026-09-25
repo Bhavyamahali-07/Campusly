@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
   getDashboard, getStudents, updateStudent, approveClub,
   getReports, resolveReport, createAnnouncement, getAnnouncements,
-  getPendingClubs,
+  getPendingClubs, getAdminNotifications, handleJoinRequest,
+  getClubMembers, getClubPendingRequests,
 } from '../controllers/adminController.js';
 import { authenticateUser, authorizeRole } from '../middleware/auth.js';
 
@@ -19,6 +20,12 @@ router.patch('/clubs/:id/approve', approveClub);
 router.get('/reports', getReports);
 router.patch('/reports/:id', resolveReport);
 router.post('/announcements', createAnnouncement);
+
+// New admin notification & club management routes
+router.get('/notifications', getAdminNotifications);
+router.patch('/join-requests/:clubId/:userId', handleJoinRequest);
+router.get('/clubs/:id/members', getClubMembers);
+router.get('/clubs/:id/pending-requests', getClubPendingRequests);
 
 export default router;
 
